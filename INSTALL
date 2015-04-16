@@ -1,0 +1,11 @@
+To install the ingwer software please edit the installer file install.pl.
+
+For successfully installing and running the software, the following prerequisites have to be fulfilled:
+
+- web server with PHP, Perl and MySQL data base
+- installed part-of-speech tagger "TreeTagger" with German library (http://www.cis.uni-muenchen.de/~schmid/tools/TreeTagger/)
+
+If you want to use the interface to the Open Corpus Workbench you need additionally:
+
+- CWB and CQPWeb: http://cwb.sourceforge.net/download.php
+

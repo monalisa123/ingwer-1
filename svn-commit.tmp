@@ -1,0 +1,36 @@
+Ingwer Version 0.1
+
+--This line, and those below, will be ignored--
+
+A    tpl
+A    tpl/importXML.tpl.php
+A    tpl/Verwaltung.tpl.php
+A    tpl/Navigation.tpl.php
+AM   tpl/Ingwer_32x32.ico
+A    tpl/Lesen.tpl.php
+AM   tpl/Ingwer_300x300.png
+A    tpl/Frame.tpl.php
+A    tmp
+A    include
+A    include/Db.class.php
+A    include/import.php
+A    include/Paper.class.php
+A    include/constants.php
+A    include/Semtracks_Neu.log
+A    include/Annotation.class.php
+A    include/Page.class.php
+A    include/Category.class.php
+A    include/init.php
+A    include/import
+A    include/import/importXMLMap.php
+A    include/import/importXML.php
+A    include/import/importText.php
+A    include/debug.php
+A    include/lesen.php
+A    include/functions.php
+A    css
+A    css/Ingwer.css
+A    DatenbankstruckturHochschulreform.sql
+A    DatenbankstruckturKriko.sql
+A    Datenbankstrucktur.sql
+A    index.php

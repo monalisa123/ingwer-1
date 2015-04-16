@@ -1,0 +1,267 @@
+% !TEX TS-program = pdflatex
+% !TEX encoding = UTF-8 Unicode
+
+% This is a simple template for a LaTeX document using the "article" class.
+% See "book", "report", "letter" for other types of document.
+
+\documentclass[11pt]{scrartcl} % use larger type; default would be 10pt
+
+\usepackage[utf8]{inputenc} % set input encoding (not needed with XeLaTeX)
+\usepackage[ngerman]{babel}
+
+%%% Examples of Article customizations
+% These packages are optional, depending whether you want the features they provide.
+% See the LaTeX Companion or other references for full information.
+
+
+\usepackage{graphicx} % support the \includegraphics command and options
+
+% \usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
+
+\usepackage{csquotes}
+\usepackage[breaklinks=true,colorlinks=false,pdfborder={0 0 0}]{hyperref}
+
+\usepackage{moreverb}
+
+\usepackage{garste}
+\usepackage{helvet}
+
+
+\deffootnote{1.5em}{1.5em}{\scriptsize\thefootnotemark \quad}
+
+
+\title{ingwer: Installationsanleitung}
+\author{semtracks gmbh}
+%\date{}                                           % Activate to display a given date or no date
+
+\begin{document}
+
+
+\includegraphics[width=\textwidth]{../Design/IngwerLogo.pdf}
+
+\maketitle
+
+
+\noindent ingwer ist eine Software f\"ur Korpusmanagement, Annotation und Analyse von Texten. Die Software wurde von der semtracks gmbh (\url{www.semtracks.com}) als Webanwendung basierend auf MySQL und PHP entwickelt und unter der GNU GPL-Lizenz ver\"offentlicht. 
+
+In diesem Dokument wird erkl\"art, wie ingwer und die dazugeh\"origen Komponenten installiert werden.
+
+\section{Voraussetzungen}
+
+ingwer erfordert zwingend folgende Voraussetzungen:
+
+\begin{enumerate}
+\item Webserver mit installiertem PHP, Perl und MySQL-Datenbank.
+\item Wortarten-Tagging-Software \enquote{TreeTagger} mit der deutschen Library: \url{http://www.ims.uni-stuttgart.de/projekte/corplex/TreeTagger/}.
+\item F\"ur die Installation des TreeTaggers ist ein Shell-Zugang zum Server (z.B. \"uber \texttt{ssh} notwendig).
+\end{enumerate}
+
+Damit k\"onnen alle internen Funktionen von ingwer benutzt werden. Es besteht aber die M\"oglichkeit, ingwer in Verbindung mit der Corpus Workbench (CWB) \url{http://cwb.sourceforge.net/} zu nutzen, um quantitative Analysen machen zu k\"onnen. Es ist dann m\"oglich, in ingwer indizierte Korpora oder Teile davon f\"ur die Corpus Workbench zu exportieren und auf dem Server \"uber das Web-Interface der CWB, CQPWeb, zu nutzen. Daf\"ur m\"ussen die CWB und CQPWeb zus\"atzlich auf dem Server installiert werden. Installationanleitungen dazu finden sich unter folgenden Adressen:
+
+\begin{itemize}
+\item CWB: \url{http://cwb.sourceforge.net/download.php}
+\item CQPWeb: \url{http://cwb.svn.sourceforge.net/viewvc/cwb/gui/cqpweb/trunk/CQPweb-setup-manual.html}
+\end{itemize}
+
+
+
+\section{Installation des TreeTaggers}
+\label{treetagger}
+
+Der \texttt{TreeTagger} besteht aus dem eigentlichen Tagger-Programm, bereits trainierten Sprachbibliotheken, einigen Bash-Scripts zur einfacheren Verwendung des Taggers in Verbindung mit Hilfsprogrammen wie einem Tokenzier und einem Trainer-Programm, mit dem neue Sprachbibliotheken auf der Basis getaggter Korpora erstellt werden können. Wir benötigen für ingwer alles bis auf das Trainer-Programm, das aber der Einfachheit halber auch gleich mitinstalliert wird.
+
+Alle Dateien und die Installationanleitung findet sich unter:\\\url{http://www.ims.uni-stuttgart.de/projekte/corplex/TreeTagger/}\\Im Detail gehen Sie wie folgt vor:
+
+\begin{enumerate}
+\item Download des Taggers für das passende Betriebssystem:\footnote{Für weitere Systeme vgl. \url{http://www.ims.uni-stuttgart.de/projekte/corplex/TreeTagger/}.}
+\begin{itemize}
+\item PC-Linux: \href{ftp://ftp.ims.uni-stuttgart.de/pub/corpora/tree-tagger-linux-3.2.tar.gz}{$\rightarrow$ Download}
+\item Mac OS X Intel: \href{ftp://ftp.ims.uni-stuttgart.de/pub/corpora/tree-tagger-MacOSX-3.2-intel.tar.gz}{$\rightarrow$ Download}
+\end{itemize}
+Paket nach dem Herunterladen in ein Verzeichnis \texttt{TreeTagger} o.\,ä. entpacken.
+\item \href{ftp://ftp.ims.uni-stuttgart.de/pub/corpora/tagger-scripts.tar.gz}{$\rightarrow$ Tagging-Scripts} in das gleiche Verzeichnis herunterladen.
+\item Installationsscript herunterladen (ggf. mit Rechts-Klick \emph{Ziel speichern unter...}): \url{ftp://ftp.ims.uni-stuttgart.de/pub/corpora/install-tagger.sh}.
+\item Die gewünschten Sprachbibliotheken (Parameter-Dateien) herunterladen:
+\begin{itemize}
+\item Für PC/Linux, Mac Intel: \url{http://www.ims.uni-stuttgart.de/projekte/corplex/TreeTagger/#Linux}.
+\item Für Sparc-Solaris und Mac PowerPC: \url{http://www.ims.uni-stuttgart.de/projekte/corplex/TreeTagger/#Solaris}.
+\end{itemize}
+Laden Sie im Minimum das \emph{German parameter file (UTF-8)} herunter. Dieses ermöglicht das Tagging der Wortarten im Deutschen. Es gibt fürs Deutsche zusätzlich auch noch die \emph{German chunker parameter}-Datei, die ein einfaches Parsing von NPs und VPs erlaubt. ingwer arbeitet allerdings nicht damit.
+
+Speichern Sie die Datei, dekomprimieren Sie sie und speichern Sie sie im \texttt{TreeTagger}-Verzeichnis im Verzeichnis \texttt{lib}. Falls es \texttt{lib} nicht gibt, erstellen Sie das Verzeichnis.
+\item Öffnen Sie nun die Shell und starten Sie das Installationsscript im \texttt{TreeTagger}-Verzeichnis:
+\begin{verbatim}
+sh install-tagger.sh
+\end{verbatim}
+\item Sie können nun die Installation testen mit:
+\begin{verbatim}
+echo "Das ist ein Test." | cmd/tree-tagger-german-utf8
+\end{verbatim}
+Es sollte dann ausgegeben werden:
+\begin{verbatim}
+Das	PDS	d
+ist	VAFIN	sein
+ein	ART	ein
+Test	NN	Test
+.	$.	.
+\end{verbatim}
+\end{enumerate}
+
+
+\section{Installation von ingwer \"uber Installer}
+
+Das Perl-Script \texttt{install.pl} kann in vielen Situationen das gesamte ingwer-Paket installieren. Es m\"ussen lediglich im Kopf der Datei einige Einstellungen, insbesondere \"uber die gew\"unschte Datenbankstruktur, sowie Pfade zu den notwendigen Programmen, konfiguriert werden. Anschlie{\ss}end kann der Installer mit \texttt{sudo perl install.pl} gestartet werden.
+
+\section{Manuelle Installation von ingwer}
+
+\subsection{Einrichten der Datenbank}
+
+\subsubsection{Datenbank und Benutzer}
+\label{DBUser}
+
+ingwer ben\"otigt eine MySQL-Datenbank und einen Benutzer, der darauf zugreifen kann. Datenbank und Benutzer k\"onnen ggf. \"uber eine Administrationsoberfl\"ache des Servers eingerichtet werden. Legen Sie dann bitte eine Datenbank mit beliebiger Bezeichnung an und einen Benutzer, der in der Datenbank lesen, schreiben und \"andern darf. Merken Sie sich Datenbankname, Benutzer und vergebenes Passwort.
+
+Alternativ k\"onnen Sie die SQL-Datei \texttt{SQLUserDB.sql} als Grundlage verwenden, um die Datenbank und den Benutzer einzurichten. Gehen Sie wie folgt vor:
+
+\begin{enumerate}
+\item \"Offnen Sie die Datei \texttt{SQLUserDB.sql} in einem Texteditor.
+\item Passen Sie folgende Werte an:
+\begin{enumerate}
+\item \texttt{IngwerUser} (Zeilen 1 und 3): Setzen Sie einen beliebigen Benutzernamen ein.
+\item \texttt{IngwerPassword} (Zeilen 1 und 3): Setzen Sie ein beliebiges Passwort ein.
+\item \texttt{IngwerDB} (Zeile 5): Setzten Sie einen beliebigen Datenbanknamen ein.
+\end{enumerate}
+\item Lesen Sie als MySQL-Root-Benutzer die Datei ein mit dem Shell-Befehl:
+
+\texttt{mysql --default-character-set=utf8 -u root -p < SQLUserDB.sql}
+\end{enumerate}
+
+\subsubsection{ingwer-Tabellen}
+\label{ingwertabs}
+
+Nun m\"ussen noch die Tabellen f\"ur ingwer in der Datenbank angelegt werden. Verwenden Sie dazu die SQL-Datei \texttt{SQLIngwerDB.sql}:
+
+\begin{enumerate}
+\item \"Offnen Sie die Datei \texttt{SQLIngwerDB.sql} in einem Texteditor.
+\item Passen Sie in Zeile 1 den Wert \texttt{IngwerDB} an und ersetzen Sie ihn durch den Datenbanknamen, den Sie oben in Kapitel \ref{DBUser} festgelegt haben.
+\item Das Einlesen der SQL-Datei erfolgt \"uber folgende Wege:
+\begin{enumerate}
+\item Wenn Sie eine Webadministratorenoberfl\"ache wie \enquote{PHPMyAdmin} o.\"a. verwenden, k\"onnen Sie die Datei \texttt{SQLIngwerDB.sql} dar\"uber einlesen. 
+\item Andernfalls verwenden Sie den Zugang zu MySQL \"uber die Shell: Lesen Sie die Datei als MySQL-Root-Benutzer oder mit dem Benutzer, den Sie oben in Kapitel \ref{DBUser} eingerichtet haben, ein mit dem Befehl:
+
+\texttt{mysql --default-character-set=utf8 -u [Benutzername] -p < SQLUserDB.sql}
+\end{enumerate}
+\end{enumerate}
+
+\subsubsection{Anpassen der Metadaten-Felder}
+
+Die in Kapitel \ref{ingwertabs} beschriebene SQL-Datei definiert eine Reihe von Standardfeldern f\"ur die Erfassung der Metadaten. Diese Felder k\"onnen den eigenen Bed\"urfnissen angepasst werden, indem die Tabellendefinition ver\"andert wird. In der Datenbanktabelle \texttt{paper\_meta\_data\_type} sind die Definition der Metadaten-Felder abgelegt. Die Tabelle hat folgende Spalten:
+\begin{itemize}
+\item \texttt{id}: Eindeutige Zahl. Beim Textimport werden die Felder Zeile für Zeile in aufsteigender Reihenfolge eingelesen, mit Ausnahme von word\_count, lemma\_count, content.
+\item \texttt{field\_name}: Interne Feldbezeichnung.
+\item \texttt{name}: In Ingwer angezeigte Bezeichnung (z.\,B. bei der Suche)
+\item \texttt{meta\_type}: Typ der Metadaten. Es gibt sechs unterschiedliche Typen, dazu sp\"ater mehr.
+\item \texttt{table}: Tabellenname in der Datenbank, in welchem die Metadaten gespeichert werden.
+\end{itemize}
+
+F\"ur die Typen der Metadaten m\"ussen die entsprechenden Felder bzw. Tabellen angelegt werden:
+
+\begin{enumerate}
+\item \texttt{int} ist eine ganz Zahl z.\,B. f\"ur \texttt{word\_anzahl}. Der SQL-Datentyp muss auch  ganzzahliger sein.
+\item \texttt{date} ist ein Datumswert. Der SQL-Datentyp muss vom Typ Date sein.
+\item \texttt{string} ist eine Zeichenkette. Der SQL-Datentyp muss vom Typ varchar oder text sein.
+\item \texttt{list} ist eine Auswahlliste. Daf\"ur m\"ussen zwei Tabellen folgenderweise angelegt werden:
+\begin{enumerate}
+	\item \texttt{paper2\emph{Tabellenname}} mit zwei Feldern in denen die zugeh\"origen Schl\"ussel der Tabellen \texttt{paper} und \texttt{\emph{Tabellenname}} abgespeichert werden. Die Felder sind von einem ganzzahligen SQL-Datentyp und hei{\ss}en  \texttt{paper\_id} und \texttt{\emph{Tabellenname}\_id}
+	\item \texttt{\emph{Tabellenname}} mit zwei Feldern. Das erste Feld ist der eindeutige Schl\"ussel \texttt{id} mit ganzzahligem autoincrement Datentyp, das zweite der \texttt{\emph{field\_name}} mit varchar oder text als Datentyp.
+\end{enumerate}
+Beispiel: \\
+\begin{center}
+\begin{tabular}[t]{ccccc}
+\hline
+  \texttt{id} & \texttt{field\_name} & \texttt{name} & \texttt{meta\_type} & \texttt{table} \\
+  \hline
+  1 & name & Zeitung & list & journal \\
+  \hline
+\end{tabular} \\
+\emph{Zeile aus Tabelle \texttt{paper\_meta\_data\_type}}
+\end{center}
+
+\begin{enumerate}
+	\item  \texttt{paper2journal} mit den zwei Feldern	\texttt{paper\_id} und \texttt{journal\_id}
+	\item  \texttt{journal} mit den zwei Feldern \texttt{id} und \texttt{name}
+\end{enumerate}
+\item \texttt{multilist} ist eine Auswahlliste mit Mehrfachauswahl. Die Tabellenstruktur entspricht der einfachen Auswahlliste.
+\item \texttt{content} ist der Textk\"orper. Es muss genau einen content geben.
+\end{enumerate}
+
+Bei den zwei Metadatenfeldern \texttt{word\_count} und \texttt{lemma\_count} ist der \texttt{name} und der \texttt{field\_name} fest vorgegeben.
+
+\subsection{Einrichten von ingwer}
+
+Nun erfolgt noch die Installation des eigentlichen ingwer-Programms. Gehen Sie dazu wie folgt vor:
+
+\begin{enumerate}
+\item Passen Sie die Datei \texttt{ingwer/include/constants.php} an, indem Sie sie in einem Texteditor \"offnen:
+\begin{itemize}
+\item Zeile 6, 7 und 8: Ersetzen Sie hier \texttt{IngwerTest} durch den MySQL-Datenbank\-namen, MySQL-Benutzernamen und das dazugeh\"orige Passwort, wie Sie es in Kapitel \ref{DBUser} festgelegt haben.
+\item In Zeilen 10 und 11 k\"onnen Sie den Benutzernamen und das Passwort eintragen, falls Sie \"uber \texttt{.htaccess} den Zugriff auf das Verzeichnis, in dem ingwer liegt, gesch\"utzt haben.
+\item Zeile 37: Setzen Sie hier den absoluten Pfad zum TreeTagger, den Sie in Kapitel \ref{treetagger} installiert haben.
+\item Zeile 38: Passen Sie hier den Pfad zum ingwer-Verzeichnis an.
+\item Zeilen 39 und 40: Passen Sie hier ggf. die Pfade zu \texttt{perl} und \texttt{diff} an.
+\end{itemize}
+\item Kopieren Sie das Verzeichnis \texttt{ingwer/} in ein Webverzeichnis Ihrer Wahl.
+\item \"Offnen Sie im Browser das ingwer-Verzeichnis (\url{http://www.ihr-server.com/ingwer/} o.\"a.).
+\item Viel Spa{\ss}! Eine Anleitung zur Bedienung von ingwer finden Sie in ingwer in der Rubrik \enquote{Hilfe}.
+\end{enumerate}
+
+\subsection{Anpassen von ingwer f\"ur die Benutzung mit der CWB}
+
+Wenn Sie ingwer in Verbindung mit der CWB und CQPWeb benutzen wollen, dann beachten Sie bitte Folgendes:
+
+\begin{enumerate}
+\item Installieren Sie zun\"achst die CWB nach folgender Anleitung: \url{http://cwb.sourceforge.net/download.php}
+\item Installieren Sie dann CQPWeb (\url{http://cwb.svn.sourceforge.net/viewvc/cwb/gui/cqpweb/trunk/CQPweb-setup-manual.html}) in einem Verzeichnis \texttt{cwb} parallel zum ingwer-Verzeichnis. Die CWB-Korpora sollten in \texttt{cwbcorpora} innerhalb des ingwer-Verzeichnisses liegen.
+\item Passen Sie in der ingwer-Datei \texttt{include/constants.php} folgende Zeilen an:
+\begin{itemize}
+\item In Zeile 34: Passen Sie ggf. den Pfad zum Verzeichnis \texttt{cwbcorpora} innerhalb des ingwer-Verzeichnisses an.
+\item In Zeilen 41 und 42: Passen Sie die Pfade zu \texttt{cwb-encode} und \texttt{cwb-makeall} an.
+\end{itemize}
+\end{enumerate}
+
+\section{Lizenzbestimmungen}
+
+ingwer wird unter der GNU GPL-Lizenz vertrieben. Das Copyright liegt bei der semtracks gmbh (2015).
+
+Diese Lizenzbestimmungen decken nur die Verwendung von ingwer ab, nicht aber die optionalen Komponenten TreeTagger und CorpusWorkbench. Deren Lizenzbedingungen sind auf den entsprechenden Webseiten ersichtlich (\url{http://www.ims.uni-stuttgart.de/projekte/corplex/TreeTagger/}, \url{http://cwb.sourceforge.net/}).
+
+\subsection{GNU GPL-Bestimmungen}
+
+ingwer is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ingwer is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see \url{http://www.gnu.org/licenses/}.
+
+ingwer ist Freie Software: Sie können es unter den Bedingungen
+der GNU General Public License, wie von der Free Software Foundation,
+Version 3 der Lizenz oder (nach Ihrer Wahl) jeder neueren
+veröffentlichten Version, weiterverbreiten und/oder modifizieren.
+
+ingwer wird in der Hoffnung, dass es nützlich sein wird, aber
+OHNE JEDE GEWÄHRLEISTUNG, bereitgestellt; sogar ohne die implizite
+Gewährleistung der MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK.
+Siehe die GNU General Public License für weitere Details.
+
+Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
+Programm erhalten haben. Wenn nicht, siehe \url{http://www.gnu.org/licenses/}.
+
+
+\end{document}  
